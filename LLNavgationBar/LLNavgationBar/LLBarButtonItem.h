@@ -1,0 +1,30 @@
+//
+//  LLBarButtonItem.h
+//  LLNavgationBar
+//
+//  Created by longlz on 2017/5/17.
+//  Copyright © 2017年 longlz. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface LLBarButtonItem : UIView
+
+@property (strong ,nonatomic) UILabel *titleLabel;
+
+@property (strong ,nonatomic) UIImageView *imageView;
+
+@property (strong ,nonatomic) UIView *customView;
+
++ (instancetype)barButtonItemWithTitle:(NSString *)title handler:(void(^)(LLBarButtonItem *barButtonItem))handler;
+
++ (instancetype)barButtonItemWithImage:(UIImage *)image handler:(void(^)(LLBarButtonItem *barButtonItem))handler;
+
++ (instancetype)barButtonItemWithTitle:(NSString *)title image:(UIImage *)image handler:(void(^)(LLBarButtonItem *barButtonItem))handler;
+
++ (instancetype)barButtonItemWithCustomView:(UIView *)view handler:(void(^)(LLBarButtonItem *barButtonItem))handler;
+
+@end
+
+
+
