@@ -19,7 +19,7 @@ static const CGFloat barHeight = 64;
 static const CGFloat padding = 10;
 static const CGFloat smallPadding = 5;
 
-@interface LLNavgationBarView ()
+@interface LLNavgationBarView ()<UINavigationControllerDelegate, UIGestureRecognizerDelegate,UINavigationBarDelegate>
 @property (strong ,nonatomic) UIView *leftBackView;
 @property (strong ,nonatomic) UIView *rightBackView;
 @property (strong ,nonatomic) UIView *contentView;
@@ -356,13 +356,22 @@ static const CGFloat smallPadding = 5;
 - (void)didMoveToSuperview{
     [super didMoveToSuperview];
     if (!self.viewController.navigationController.navigationBarHidden) {
-        self.viewController.navigationController.navigationBarHidden = YES;
+        [self.viewController.navigationController setNavigationBarHidden:YES animated:YES];
+        self.viewController.navigationController.interactivePopGestureRecognizer.delegate = self;
+        self.viewController.navigationController.delegate = self;
     }
     @LL_WeakObj(self);
     [self.superview ll_setHook:^{
         @LL_StrongObj(self);
         [self.superview bringSubviewToFront:self];
     }];
+}
+
+#pragma mark UINavigationControllerDelegate  
+- (void)navigationController:(UINavigationController *)navigationController
+       didShowViewController:(UIViewController *)viewController
+                    animated:(BOOL)animate{
+    self.viewController.navigationController.interactivePopGestureRecognizer.enabled = YES;
 }
 
 @end
@@ -383,3 +392,4 @@ static const CGFloat smallPadding = 5;
 }
 
 @end
+

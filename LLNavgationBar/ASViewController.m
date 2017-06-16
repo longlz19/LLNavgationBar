@@ -1,30 +1,27 @@
 //
-//  BBBViewController.m
+//  ASViewController.m
 //  LLNavgationBar
 //
-//  Created by longlz on 2017/6/12.
+//  Created by longlz on 2017/6/14.
 //  Copyright © 2017年 longlz. All rights reserved.
 //
 
-#import "BBBViewController.h"
+#import "ASViewController.h"
 
-@interface BBBViewController ()
+@interface ASViewController ()
 
 @end
 
-@implementation BBBViewController
+@implementation ASViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"BBB";
+    // Do any additional setup after loading the view.
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-- (IBAction)root:(id)sender {
-    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 /*
