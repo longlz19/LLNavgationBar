@@ -7,6 +7,7 @@
 //
 
 #import "BBBViewController.h"
+#import "LLNavgationBar.h"
 
 @interface BBBViewController ()
 
@@ -17,6 +18,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"BBB";
+    
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 100, 60)];
+    view.backgroundColor = [UIColor redColor];
+    self.barView.rightBarButtonItem = [LLBarButtonItem barButtonItemWithCustomView:view handler:^(LLBarButtonItem *barButtonItem) {
+        
+    }];
+    
 }
 
 - (void)didReceiveMemoryWarning {

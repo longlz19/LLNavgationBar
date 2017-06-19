@@ -7,7 +7,7 @@
 //
 
 #import "CCCViewController.h"
-#import "LLNavgationBarView.h"
+#import "LLNavgationBar.h"
 
 @interface CCCViewController ()
 

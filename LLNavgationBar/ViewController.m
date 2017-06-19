@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "LLNavgationBarView.h"
+#import "LLNavgationBar.h"
 #import "BBBViewController.h"
 #import "CCCViewController.h"
 

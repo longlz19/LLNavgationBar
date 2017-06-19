@@ -88,6 +88,12 @@
 
 - (void)setCustomViewLayout{
     [self.customView make_constraintSuperViewWithEdges:kMakeEdge(0, 0, 0, 0)];
+    if (self.customView.frame.size.height > 0) {
+        [self.customView make_constraintSuperView:NSLayoutAttributeHeight inset:MIN(44, self.customView.frame.size.height)];
+    }
+    if (self.customView.frame.size.width > 0) {
+        [self.customView make_constraintSuperView:NSLayoutAttributeWidth inset:self.customView.frame.size.width];
+    }
 }
 
 - (void)setTitleAndImageLayout{

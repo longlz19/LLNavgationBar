@@ -19,12 +19,10 @@ static const CGFloat barHeight = 64;
 static const CGFloat padding = 10;
 static const CGFloat smallPadding = 5;
 
-@interface LLNavgationBarView ()<UINavigationControllerDelegate, UIGestureRecognizerDelegate,UINavigationBarDelegate>
+@interface LLNavgationBarView ()
 @property (strong ,nonatomic) UIView *leftBackView;
 @property (strong ,nonatomic) UIView *rightBackView;
 @property (strong ,nonatomic) UIView *contentView;
-@property (strong ,nonatomic) LLBarButtonItem *autoBackBarButtonItem;
-@property (strong ,nonatomic) NSLayoutConstraint *topConstraint;
 @end
 
 @implementation LLNavgationBarView
@@ -32,7 +30,7 @@ static const CGFloat smallPadding = 5;
 + (instancetype)addBarTo:(UIView *)view{
     LLNavgationBarView *barView = [[LLNavgationBarView alloc]init];
     [view addSubview:barView];
-    barView.topConstraint = [barView make_constraintSuperView:NSLayoutAttributeTop inset:0];
+    [barView make_constraintSuperView:NSLayoutAttributeTop inset:0];
     [barView make_constraintSuperView:NSLayoutAttributeLeft inset:0];
     [barView make_constraintSuperView:NSLayoutAttributeRight inset:0];
     [barView make_constraintSuperView:NSLayoutAttributeHeight relation:NSLayoutRelationGreaterThanOrEqual inset:barHeight];
@@ -77,7 +75,7 @@ static const CGFloat smallPadding = 5;
                 self.backBarButtonItem = [LLBarButtonItem barButtonItemWithTitle:title image:[self drawArrow] handler:^(LLBarButtonItem *barButtonItem) {
                     [self.viewController.navigationController popViewControllerAnimated:YES];
                 }];
-                self.leftBarButtonItem = self.backBarButtonItem;
+//                self.leftBarButtonItem = self.backBarButtonItem;
                 *stop = YES;
             }
         }];
@@ -140,9 +138,17 @@ static const CGFloat smallPadding = 5;
     [self.contentView addSubview:view];
     [view make_constraintSuperView:NSLayoutAttributeCenterX inset:0];
     [view make_constraintSuperView:NSLayoutAttributeCenterY inset:0];
+    
+    [view make_constraint:NSLayoutAttributeLeft toAttribute:NSLayoutAttributeRight ofView:self.leftBackView inset:smallPadding];
     [view make_constraintSuperView:NSLayoutAttributeTop relation:NSLayoutRelationGreaterThanOrEqual inset:smallPadding];
     [view make_constraintSuperView:NSLayoutAttributeBottom relation:NSLayoutRelationGreaterThanOrEqual inset:smallPadding];
-//    [view make_constraint:NSLayoutAttributeRight toAttribute:NSLayoutAttributeLeft ofView:self.rightBackView relation:NSLayoutRelationGreaterThanOrEqual inset:padding];
+    
+    if (view.frame.size.height > 0) {
+        [view make_constraintSuperView:NSLayoutAttributeHeight inset:view.frame.size.height];
+    }
+    if (view.frame.size.width > 0) {
+        [view make_constraintSuperView:NSLayoutAttributeWidth relation:NSLayoutRelationGreaterThanOrEqual  inset:view.frame.size.width];
+    }
 }
 
 - (void)updateLeftBarItem{
@@ -153,7 +159,7 @@ static const CGFloat smallPadding = 5;
         
         [barItem make_constraintSuperView:NSLayoutAttributeCenterY inset:0];
         [barItem make_constraintSuperView:NSLayoutAttributeTop relation:NSLayoutRelationGreaterThanOrEqual inset:0];
-        
+
         //idx == 0 设置与父试图的左边距
         if (idx == 0) {
             [barItem make_constraintSuperView:NSLayoutAttributeLeft inset:0];
@@ -176,7 +182,6 @@ static const CGFloat smallPadding = 5;
 
         [barItem make_constraintSuperView:NSLayoutAttributeCenterY inset:0];
         [barItem make_constraintSuperView:NSLayoutAttributeTop relation:NSLayoutRelationGreaterThanOrEqual inset:0];
-        
         //idx == 0 设置与父试图的右边距
         if (idx == 0) {
             [barItem make_constraintSuperView:NSLayoutAttributeRight inset:0];
@@ -215,6 +220,11 @@ static const CGFloat smallPadding = 5;
     }
     _titleView = titleView;
     [self updateTitleView:titleView];
+}
+
+- (void)setBackBarButtonItem:(LLBarButtonItem *)backBarButtonItem{
+    _backBarButtonItem = backBarButtonItem;
+    self.leftBarButtonItem = backBarButtonItem;
 }
 
 - (void)setLeftBarButtonItem:(LLBarButtonItem *)leftBarButtonItem{
@@ -357,8 +367,6 @@ static const CGFloat smallPadding = 5;
     [super didMoveToSuperview];
     if (!self.viewController.navigationController.navigationBarHidden) {
         [self.viewController.navigationController setNavigationBarHidden:YES animated:YES];
-        self.viewController.navigationController.interactivePopGestureRecognizer.delegate = self;
-        self.viewController.navigationController.delegate = self;
     }
     @LL_WeakObj(self);
     [self.superview ll_setHook:^{
@@ -367,12 +375,6 @@ static const CGFloat smallPadding = 5;
     }];
 }
 
-#pragma mark UINavigationControllerDelegate  
-- (void)navigationController:(UINavigationController *)navigationController
-       didShowViewController:(UIViewController *)viewController
-                    animated:(BOOL)animate{
-    self.viewController.navigationController.interactivePopGestureRecognizer.enabled = YES;
-}
 
 @end
 
