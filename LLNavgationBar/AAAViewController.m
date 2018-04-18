@@ -25,6 +25,8 @@
     self.extendedLayoutIncludesOpaqueBars = YES;
     self.isTop = YES;
     self.barView.title = @"AAA";
+    
+    NSLog(@"CCCCCCCCCCC");
 }
 
 - (void)viewDidLayoutSubviews{
