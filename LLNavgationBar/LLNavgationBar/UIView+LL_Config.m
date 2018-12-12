@@ -68,6 +68,17 @@
     return [self make_constraint:attribute toAttribute:toAttribute ofView:ofView relation:relation inset:inset];
 }
 
+- (NSLayoutConstraint *)make_constraintDimension:(NSLayoutAttribute)attribute inset:(CGFloat)inset{
+    return [self make_constraint:attribute toAttribute:NSLayoutAttributeNotAnAttribute ofView:nil relation:NSLayoutRelationEqual inset:inset];
+}
+
+- (NSArray *)make_constraintDimensions:(CGSize)size{
+    NSMutableArray *constraints = [[NSMutableArray alloc]init];
+    [constraints addObject:[self make_constraintDimension:NSLayoutAttributeWidth inset:size.width]];
+    [constraints addObject:[self make_constraintDimension:NSLayoutAttributeHeight inset:size.height]];
+    return constraints;
+}
+
 - (NSArray *)make_constraintSuperViewWithEdges:(UIEdgeInsets)edge{
     NSMutableArray *constraints = [[NSMutableArray alloc]init];
     [constraints addObject:[self make_constraintSuperView:NSLayoutAttributeTop inset:edge.top]];

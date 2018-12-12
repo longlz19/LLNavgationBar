@@ -23,6 +23,12 @@
 
 #pragma mark - SuperView make_constraint
 - (NSLayoutConstraint *)make_constraintSuperView:(NSLayoutAttribute)attribute inset:(CGFloat)inset;
+
+//设置自身尺寸  width  height
+- (NSLayoutConstraint *)make_constraintDimension:(NSLayoutAttribute)attribute inset:(CGFloat)inset;
+
+- (NSArray *)make_constraintDimensions:(CGSize)size;
+
 - (NSLayoutConstraint *)make_constraintSuperView:(NSLayoutAttribute)attribute relation:(NSLayoutRelation)relation inset:(CGFloat)inset;
 
 - (NSArray *)make_constraintSuperViewWithEdges:(UIEdgeInsets)edge;

@@ -16,6 +16,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.navigationBarHidden = YES;
     __weak typeof (self) weakSelf = self;
     if ([self respondsToSelector:@selector(interactivePopGestureRecognizer)]){
         self.interactivePopGestureRecognizer.delegate = weakSelf;
@@ -23,8 +24,7 @@
     }
 }
 
-- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
-{
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated{
     if ([self respondsToSelector:@selector(interactivePopGestureRecognizer)]){
         self.interactivePopGestureRecognizer.enabled = NO;
     }
@@ -37,6 +37,10 @@
                     animated:(BOOL)animate
 {
     if ([self respondsToSelector:@selector(interactivePopGestureRecognizer)]){
+        if (self.viewControllers.count <= 1) {
+            self.interactivePopGestureRecognizer.enabled = NO;
+            return;
+        }
         self.interactivePopGestureRecognizer.enabled = YES;
     }
 }

@@ -15,9 +15,10 @@
 //strong
 #define LL_StrongObj(o) autoreleasepool{} __strong typeof(o) o = o##Weak;
 
-static const CGFloat barHeight = 64;
+
+static const CGFloat barContentHeight = 44;
 static const CGFloat padding = 10;
-static const CGFloat smallPadding = 5;
+//static const CGFloat smallPadding = 5;
 
 @interface LLNavgationBarView ()
 @property (strong ,nonatomic) UIView *leftBackView;
@@ -26,15 +27,30 @@ static const CGFloat smallPadding = 5;
 @end
 
 @implementation LLNavgationBarView
+- (void)dealloc
+{
+    NSLog(@"LLNavgationBarView dealloc");
+}
 
 + (instancetype)addBarTo:(UIView *)view{
     LLNavgationBarView *barView = [[LLNavgationBarView alloc]init];
     [view addSubview:barView];
+    barView.backgroundColor = [UIColor whiteColor];
     [barView make_constraintSuperView:NSLayoutAttributeTop inset:0];
     [barView make_constraintSuperView:NSLayoutAttributeLeft inset:0];
     [barView make_constraintSuperView:NSLayoutAttributeRight inset:0];
-    [barView make_constraintSuperView:NSLayoutAttributeHeight relation:NSLayoutRelationGreaterThanOrEqual inset:barHeight];
+    CGFloat height = ([barView isStatusBarAddHeight] ? 20 : kStatusBarHeight) + barContentHeight;
+    [barView make_constraintSuperView:NSLayoutAttributeHeight inset:height];
     return barView;
+}
+
+//判断StatusBar 是否增高
+- (BOOL)isStatusBarAddHeight{
+    CGFloat statusBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height;
+    if (statusBarHeight == 40) {
+        return YES;
+    }
+    return NO;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame{
@@ -55,7 +71,7 @@ static const CGFloat smallPadding = 5;
 }
 
 - (void)commonInit{
-    self.barFont = [UIFont systemFontOfSize:16];
+    self.barFont = [UIFont systemFontOfSize:18];
     self.barTintColor = [UIColor blackColor];    
     self.shadowView.backgroundColor = [UIColor lightGrayColor];
     [self addSubview:self.contentView];
@@ -64,7 +80,7 @@ static const CGFloat smallPadding = 5;
 - (void)autoAddLeftButtonItem{
     if (self.viewController.navigationController.viewControllers.count > 1 && !self.leftBarButtonItem) {
         [self.viewController.navigationController.viewControllers enumerateObjectsUsingBlock:^(__kindof UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if (obj == self.viewController) {
+            if (obj == self.viewController && idx > 0) {
                 UIViewController *preViewController = self.viewController.navigationController.viewControllers[idx-1];
                 
                 NSString *title = @"返回";
@@ -72,7 +88,9 @@ static const CGFloat smallPadding = 5;
                     UILabel *label = (UILabel *)preViewController.barView.titleView;
                     title = label.text;
                 }
+                @LL_WeakObj(self)
                 self.backBarButtonItem = [LLBarButtonItem barButtonItemWithTitle:title image:[self drawArrow] handler:^(LLBarButtonItem *barButtonItem) {
+                    @LL_StrongObj(self)
                     [self.viewController.navigationController popViewControllerAnimated:YES];
                 }];
 //                self.leftBarButtonItem = self.backBarButtonItem;
@@ -139,9 +157,6 @@ static const CGFloat smallPadding = 5;
     [view make_constraintSuperView:NSLayoutAttributeCenterX inset:0];
     [view make_constraintSuperView:NSLayoutAttributeCenterY inset:0];
     
-    [view make_constraint:NSLayoutAttributeLeft toAttribute:NSLayoutAttributeRight ofView:self.leftBackView inset:smallPadding];
-    [view make_constraintSuperView:NSLayoutAttributeTop relation:NSLayoutRelationGreaterThanOrEqual inset:smallPadding];
-    [view make_constraintSuperView:NSLayoutAttributeBottom relation:NSLayoutRelationGreaterThanOrEqual inset:smallPadding];
     
     if (view.frame.size.height > 0) {
         [view make_constraintSuperView:NSLayoutAttributeHeight inset:view.frame.size.height];
@@ -153,6 +168,7 @@ static const CGFloat smallPadding = 5;
 
 - (void)updateLeftBarItem{
     [self.leftBackView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
     [self.leftBarButtonItems enumerateObjectsUsingBlock:^(LLBarButtonItem * _Nonnull barItem, NSUInteger idx, BOOL * _Nonnull stop) {
         [self.leftBackView addSubview:barItem];
         barItem.titleLabel.font = self.barFont;
@@ -177,6 +193,7 @@ static const CGFloat smallPadding = 5;
 - (void)updateRightBarItem{
     [self.rightBackView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [self.rightBarButtonItems enumerateObjectsUsingBlock:^(LLBarButtonItem * _Nonnull barItem, NSUInteger idx, BOOL * _Nonnull stop) {
+        
         [self.rightBackView addSubview:barItem];
         barItem.titleLabel.font = self.barFont;
 
@@ -322,7 +339,7 @@ static const CGFloat smallPadding = 5;
         
         [_leftBackView make_constraintSuperView:NSLayoutAttributeLeft inset:padding];
         [_leftBackView make_constraintSuperView:NSLayoutAttributeTop inset:0];
-        [_leftBackView make_constraintSuperView:NSLayoutAttributeHeight inset:44];
+        [_leftBackView make_constraintSuperView:NSLayoutAttributeHeight inset:barContentHeight];
     }
     return _leftBackView;
 }
@@ -336,7 +353,7 @@ static const CGFloat smallPadding = 5;
         [_rightBackView setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
         [_rightBackView make_constraintSuperView:NSLayoutAttributeTop inset:0];
         [_rightBackView make_constraintSuperView:NSLayoutAttributeRight inset:padding];
-        [_rightBackView make_constraintSuperView:NSLayoutAttributeHeight inset:44];
+        [_rightBackView make_constraintSuperView:NSLayoutAttributeHeight inset:barContentHeight];
     }
     return _rightBackView;
 }
@@ -346,7 +363,8 @@ static const CGFloat smallPadding = 5;
         _contentView = [[UIView alloc]init];
         _contentView.backgroundColor = [UIColor clearColor];
         [self addSubview:_contentView];
-        [_contentView make_constraintSuperViewWithEdges:kMakeEdge(20, 0, 0, 0)];
+        [_contentView make_constraintSuperViewWithEdges:kMakeEdge(0, 0, 0, 0) excludingEdge:UIRectEdgeTop];
+        [_contentView make_constraintDimension:NSLayoutAttributeHeight inset:barContentHeight];
     }
     return _contentView;
 }
@@ -355,9 +373,8 @@ static const CGFloat smallPadding = 5;
     if (_shadowView == nil) {
         _shadowView = [[UIView alloc]init];
         [self addSubview:_shadowView];
-        
         [_shadowView make_constraintSuperViewWithEdges:kMakeEdge(0, 0, 0, 0) excludingEdge:UIRectEdgeTop];
-        [_shadowView make_constraintSuperView:NSLayoutAttributeHeight inset:1/[UIScreen mainScreen].scale];
+        [_shadowView make_constraintSuperView:NSLayoutAttributeHeight inset:1];
     }
     return _shadowView;
 }
@@ -391,6 +408,7 @@ static const CGFloat smallPadding = 5;
 
 - (void)setTitle:(NSString *)title{
     self.barView.title = title;
+    self.navigationItem.title = title;
 }
 
 @end

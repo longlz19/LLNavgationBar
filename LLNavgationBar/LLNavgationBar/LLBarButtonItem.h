@@ -16,6 +16,8 @@
 
 @property (strong ,nonatomic) UIView *customView;
 
+@property (copy ,nonatomic) void(^hanlder)(LLBarButtonItem *barButtonItem);
+
 + (instancetype)barButtonItemWithTitle:(NSString *)title handler:(void(^)(LLBarButtonItem *barButtonItem))handler;
 
 + (instancetype)barButtonItemWithImage:(UIImage *)image handler:(void(^)(LLBarButtonItem *barButtonItem))handler;

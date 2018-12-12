@@ -89,8 +89,8 @@
         return;
     }
     CGFloat offY = scrollView.contentOffset.y;
-    if (offY > 64) {
-        offY = 64;
+    if (offY > (kStatusBarHeight + 44)) {
+        offY = (kStatusBarHeight + 44);
     }
     [self.barView setTopInset:-offY animated:YES];
     self.topConstraint.constant = 44 - offY;

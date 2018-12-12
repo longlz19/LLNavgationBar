@@ -15,8 +15,6 @@
 
 @property (strong ,nonatomic) UIImage *image;
 
-@property (copy ,nonatomic) void(^hanlder)(LLBarButtonItem *barButtonItem);
-
 @end
 
 @implementation LLBarButtonItem
@@ -114,6 +112,8 @@
         [self.titleLabel make_constraintSuperView:NSLayoutAttributeBottom inset:0];
     }else if (self.image) {
         [self.imageView make_constraintSuperView:NSLayoutAttributeRight inset:0];
+        [self.imageView make_constraintSuperView:NSLayoutAttributeWidth inset:self.image.size.width];
+        [self.imageView make_constraintSuperView:NSLayoutAttributeHeight inset:self.image.size.height];
     }
 }
 
@@ -145,6 +145,7 @@
 - (UIImageView *)imageView{
     if (_imageView == nil) {
         _imageView = [[UIImageView alloc]init];
+        _imageView.contentMode = UIViewContentModeCenter;
     }
     return _imageView;
 }

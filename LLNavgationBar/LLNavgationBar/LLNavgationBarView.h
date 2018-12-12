@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "LLBarButtonItem.h"
 
+#define kStatusBarHeight [[UIApplication sharedApplication] statusBarFrame].size.height
+
 @interface LLNavgationBarView : UIView
 
 /**
