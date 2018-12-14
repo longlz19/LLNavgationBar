@@ -172,6 +172,9 @@ static const CGFloat padding = 10;
     [self.leftBarButtonItems enumerateObjectsUsingBlock:^(LLBarButtonItem * _Nonnull barItem, NSUInteger idx, BOOL * _Nonnull stop) {
         [self.leftBackView addSubview:barItem];
         barItem.titleLabel.font = self.barFont;
+    }];
+    
+    [self.leftBarButtonItems enumerateObjectsUsingBlock:^(LLBarButtonItem * _Nonnull barItem, NSUInteger idx, BOOL * _Nonnull stop) {
         
         [barItem make_constraintSuperView:NSLayoutAttributeCenterY inset:0];
         [barItem make_constraintSuperView:NSLayoutAttributeTop relation:NSLayoutRelationGreaterThanOrEqual inset:0];
@@ -192,11 +195,13 @@ static const CGFloat padding = 10;
 
 - (void)updateRightBarItem{
     [self.rightBackView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
     [self.rightBarButtonItems enumerateObjectsUsingBlock:^(LLBarButtonItem * _Nonnull barItem, NSUInteger idx, BOOL * _Nonnull stop) {
-        
         [self.rightBackView addSubview:barItem];
         barItem.titleLabel.font = self.barFont;
-
+    }];
+    
+    [self.rightBarButtonItems enumerateObjectsUsingBlock:^(LLBarButtonItem * _Nonnull barItem, NSUInteger idx, BOOL * _Nonnull stop) {
         [barItem make_constraintSuperView:NSLayoutAttributeCenterY inset:0];
         [barItem make_constraintSuperView:NSLayoutAttributeTop relation:NSLayoutRelationGreaterThanOrEqual inset:0];
         //idx == 0 设置与父试图的右边距

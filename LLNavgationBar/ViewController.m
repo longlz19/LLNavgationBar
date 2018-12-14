@@ -28,13 +28,24 @@
     self.barView.title = @"Home";
     self.barView.backgroundColor = [UIColor whiteColor];
     self.isScrolling = YES;
-    self.barView.rightBarButtonItem = [LLBarButtonItem barButtonItemWithTitle:@"滚动" handler:^(LLBarButtonItem *barButtonItem) {
+    
+    LLBarButtonItem *a = [LLBarButtonItem barButtonItemWithTitle:@"A" handler:^(LLBarButtonItem *barButtonItem) {
+        
+    }];
+    
+    LLBarButtonItem *b = [LLBarButtonItem barButtonItemWithTitle:@"B" handler:^(LLBarButtonItem *barButtonItem) {
+        
+    }];
+    
+   LLBarButtonItem *c = [LLBarButtonItem barButtonItemWithTitle:@"滚动" handler:^(LLBarButtonItem *barButtonItem) {
         self.isScrolling = !self.isScrolling;
         barButtonItem.titleLabel.text = (self.isScrolling?@"滚动":@"停止");
         if (!self.isScrolling) {
             [self.barView setTopInset:0 animated:YES];
         }
-    }];
+   }];
+
+    self.barView.rightBarButtonItems = @[a,b,c];
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return 100;
